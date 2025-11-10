@@ -1,7 +1,9 @@
 import React from "react";
 
-const SensorAlerts = ({ sensors, onSelectSensor }) => {
-  const formatDate = (d) => new Date(d).toLocaleString("es-CL", { hour12: false });
+const SensorAlerts = ({ sensors, onSelectSensor, onAddSensor, onClose }) => {
+  const formatDate = (d) =>
+    new Date(d).toLocaleString("es-CL", { hour12: false });
+
   const categories = {
     critical: { title: "Críticas", color: "red", icon: "⚠️" },
     warning: { title: "Advertencias", color: "yellow", icon: "🟡" },
@@ -9,9 +11,33 @@ const SensorAlerts = ({ sensors, onSelectSensor }) => {
   };
 
   return (
-    <div className="bg-white border border-gray-200 rounded-3xl p-6 shadow-xl h-full overflow-y-auto fade-in">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">🔔 Alertas</h2>
+    <div className="fade-in">
+      {/* 🔔 Encabezado principal */}
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+          🔔 Alertas
+        </h2>
 
+        <div className="flex items-center gap-2">
+          <button
+            onClick={onAddSensor}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg text-sm shadow"
+            title="Agregar sensor"
+          >
+            + Agregar
+          </button>
+
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-800 text-xl font-bold px-2"
+            title="Cerrar panel"
+          >
+            ✕
+          </button>
+        </div>
+      </div>
+
+      {/* 🔹 Listado de categorías */}
       {Object.entries(categories).map(([status, info]) => {
         const filtered = sensors.filter((s) => s.status === status);
         if (filtered.length === 0) return null;
@@ -24,6 +50,7 @@ const SensorAlerts = ({ sensors, onSelectSensor }) => {
             <h3 className={`text-xl font-semibold text-${info.color}-600 mb-3`}>
               {info.icon} {info.title}
             </h3>
+
             {filtered.map((s) => (
               <div
                 key={s.id}
@@ -31,7 +58,9 @@ const SensorAlerts = ({ sensors, onSelectSensor }) => {
                 onClick={() => onSelectSensor(s)}
               >
                 <p className={`font-bold text-${info.color}-700`}>{s.name}</p>
-                <p className={`text-${info.color}-600 text-sm`}>Nivel: {s.value}%</p>
+                <p className={`text-${info.color}-600 text-sm`}>
+                  Nivel: {s.value}%
+                </p>
                 <p className={`text-xs text-${info.color}-500`}>
                   Última actualización: {formatDate(s.lastUpdate)}
                 </p>

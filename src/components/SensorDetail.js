@@ -8,34 +8,30 @@ const SensorDetail = ({ sensor, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-white rounded-2xl shadow-xl p-6 w-[90%] max-w-lg relative">
-        {/* Botón cerrar */}
+      {/* Contenedor centrado */}
+      <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-lg h-[80vh] overflow-y-auto relative animate-fade-in">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl font-bold leading-none"
+          className="absolute top-4 right-6 text-gray-500 hover:text-gray-800 text-2xl font-bold leading-none"
           title="Cerrar"
         >
           ✕
         </button>
 
-        {/* Encabezado */}
-        <h2 className="text-2xl font-bold mb-2">{name}</h2>
-        <p className="text-gray-600 mb-4">{region}</p>
+        <h2 className="text-2xl font-bold mb-2 mt-2">{name}</h2>
+        <p className="text-gray-600 mb-2">{region}</p>
         <p className="text-gray-500 text-sm mb-4">
           Última actualización: {new Date(lastUpdate).toLocaleString()}
         </p>
 
-        {/* Información de máquina */}
         <div className="border-t pt-3 mb-4">
           <h3 className="text-lg font-semibold mb-2">Tipo de máquina:</h3>
           <p className="text-gray-700 mb-1">{type || "No especificado"}</p>
           <p className="text-gray-600">
-            Horas de inactividad:{" "}
-            <strong>{inactivityHours ?? "0"}</strong> h
+            Horas de inactividad: <strong>{inactivityHours ?? "0"}</strong> h
           </p>
         </div>
 
-        {/* Componentes */}
         {components ? (
           <>
             <h3 className="text-lg font-semibold mb-2">Componentes</h3>
@@ -61,7 +57,6 @@ const SensorDetail = ({ sensor, onClose }) => {
                     <p className="text-sm text-gray-600">
                       Último cambio: {comp.lastChange}
                     </p>
-                    {/* Barra de progreso */}
                     <div className="w-full bg-gray-200 h-2 rounded mt-2">
                       <div
                         className={`h-2 rounded ${
