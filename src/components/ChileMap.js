@@ -26,47 +26,41 @@ const ChileMap = ({ sensors, onSelectSensor, onAddSensor }) => {
     return null;
   };
 
-  // 🗺️ Límites AMPLIADOS de Chile (más espacio al norte, sur y mar)
+  // 🗺️ Límites ampliados de Chile
   const chileBounds = [
-    [-60.0, -85.0], // suroeste (más al sur y al oeste)
-    [-15.0, -60.0], // noreste (más al norte y al este)
+    [-60.0, -85.0],
+    [-15.0, -60.0],
   ];
 
   return (
     <div className="absolute inset-0 z-0">
       <MapContainer
-        center={[-35.6751, -71.543]} // Centro de Chile
-        zoom={4.7} // 🔹 un poco más alejado para ver todo Chile
-        minZoom={3.8} // 🔹 permite ver más del territorio
-        maxZoom={18} // 🔹 máximo acercamiento
+        center={[-35.6751, -71.543]}
+        zoom={4.7}
+        minZoom={3.8}
+        maxZoom={18}
         style={{ width: "100%", height: "100vh", zIndex: 0 }}
         worldCopyJump={true}
-        maxBounds={chileBounds} // 🔒 Limita la vista general
-        maxBoundsViscosity={0.9} // 🔹 leve resistencia en el borde
+        maxBounds={chileBounds}
+        maxBoundsViscosity={0.9}
       >
-        {/* 🌎 Capa base */}
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
         />
 
-        {/* 📍 Marcadores de sedes */}
         {sensors.map((s) => (
           <Marker
             key={s.id}
             position={[s.location.latitude, s.location.longitude]}
             eventHandlers={{
-              click: () => onSelectSensor(s),
+              click: () => onSelectSensor({ id: s.id, name: s.name }),
               mouseover: () => setHoveredSensor(s.id),
               mouseout: () => setHoveredSensor(null),
             }}
           >
             {hoveredSensor === s.id && (
-              <Popup
-                autoClose={false}
-                closeButton={false}
-                className="!z-[5000]"
-              >
+              <Popup autoClose={false} closeButton={false}>
                 <div className="text-sm">
                   <strong>{s.name}</strong>
                   <br />
@@ -97,7 +91,6 @@ const ChileMap = ({ sensors, onSelectSensor, onAddSensor }) => {
           </Marker>
         ))}
 
-        {/* 🔄 Controlador de vista (flyTo opcional) */}
         <MapViewUpdater />
       </MapContainer>
     </div>

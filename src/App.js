@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import ChileMap from "./components/ChileMap";
@@ -18,12 +18,41 @@ const determineStatus = (value) => {
 const applyStatusToSensors = (sensorList) =>
   sensorList.map((s) => ({ ...s, status: determineStatus(s.value) }));
 
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:4000";
+
 const App = () => {
   const [sensors, setSensors] = useState(applyStatusToSensors(defaultSensors));
   const [selectedSensor, setSelectedSensor] = useState(null);
   const [showAlerts, setShowAlerts] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+
+  // 🔹 Cargar sedes desde la API al iniciar
+  useEffect(() => {
+    const fetchSedes = async () => {
+      try {
+        const res = await fetch(`${API_URL}/api/sedes`);
+        if (!res.ok) throw new Error("Error al obtener sedes");
+        const sedes = await res.json();
+
+        setSensors(
+          sedes.map((s) => ({
+            id: s.id,
+            name: s.nombre,
+            location: { latitude: s.latitud, longitude: s.longitud },
+            region: s.region,
+            value: 70,
+            lastUpdate: new Date().toISOString(),
+            status: "normal",
+          }))
+        );
+      } catch (err) {
+        console.error("⚠️ No se pudieron obtener las sedes:", err);
+      }
+    };
+
+    fetchSedes();
+  }, []);
 
   // Filtro seguro (previene undefined)
   const filteredSensors = sensors.filter((s) =>
@@ -33,16 +62,44 @@ const App = () => {
   const handleSearch = (query) => setSearchTerm(query);
 
   // Agregar nueva sede
-  const handleAddSensor = (sensorData) => {
-    const id = Date.now().toString();
-    const sensor = {
-      id,
-      ...sensorData,
-      value: 50,
-      lastUpdate: new Date().toISOString(),
-      status: determineStatus(50),
-    };
-    setSensors((prev) => [...prev, sensor]);
+  const handleAddSensor = async (sensorData) => {
+    try {
+      const res = await fetch(`${API_URL}/api/sedes`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nombre: sensorData.name,
+          region: "Chile",
+          latitud: sensorData.location?.latitude,
+          longitud: sensorData.location?.longitude,
+          maquinas: sensorData.machines,
+        }),
+      });
+
+      if (!res.ok) throw new Error("Error al crear sede");
+      const data = await res.json();
+
+      alert(`✅ Sede creada correctamente (ID: ${data.sedeId})`);
+
+      // 🔄 Actualiza lista de sedes
+      const sedesRes = await fetch(`${API_URL}/api/sedes`);
+      const sedes = await sedesRes.json();
+
+      setSensors(
+        sedes.map((s) => ({
+          id: s.id,
+          name: s.nombre,
+          location: { latitude: s.latitud, longitude: s.longitud },
+          region: s.region,
+          value: 70,
+          lastUpdate: new Date().toISOString(),
+          status: "normal",
+        }))
+      );
+    } catch (err) {
+      console.error("❌ Error al crear sede:", err);
+      alert("No se pudo crear la sede");
+    }
   };
 
   return (

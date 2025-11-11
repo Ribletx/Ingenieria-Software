@@ -1,36 +1,61 @@
 {
-      "scripts": {
-            "start": "react-scripts start",
-            "build": "react-scripts build",
-            "test": "react-scripts test",
-            "eject": "react-scripts eject"
-      },
-      "dependencies": {
-            "autoprefixer": "^10.0.0",
-            "leaflet": "^1.9.4",
-            "lucide-react": "^0.553.0",
-            "mapbox-gl": "^3.16.0",
-            "postcss": "^8",
-            "react": "^18.0.0",
-            "react-dom": "^18.0.0",
-            "react-leaflet": "^4.2.1",
-            "react-map-gl": "^8.1.0",
-            "react-scripts": "^5.0.0",
-            "tailwind-merge": "^2.4.0",
-            "tailwindcss": "^3.4.1",
-            "tailwindcss-animate": "^1.0.7"
-      },
-      "main": "/index.js",
-      "browserslist": {
-            "production": [
-                  ">0.2%",
-                  "not dead",
-                  "not op_mini all"
-            ],
-            "development": [
-                  "last 1 chrome version",
-                  "last 1 firefox version",
-                  "last 1 safari version"
-            ]
-      }
+  "name": "ingenieria-software",
+  "version": "1.0.0",
+  "description": "Proyecto para el curso de Ingeniería de Software — Sistema de Monitoreo de Sensores en Tiempo Real a lo largo de Chile",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "server": "nodemon Api/server.js",
+    "dev": "concurrently \"npm run server\" \"npm start\""
+  },
+  "dependencies": {
+    "autoprefixer": "^10.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "leaflet": "^1.9.4",
+    "lucide-react": "^0.553.0",
+    "mapbox-gl": "^3.16.0",
+    "pg": "^8.16.3",
+    "postcss": "^8.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-leaflet": "^4.2.1",
+    "react-map-gl": "^8.1.0",
+    "react-scripts": "^5.0.0",
+    "tailwind-merge": "^2.4.0",
+    "tailwindcss": "^3.4.1",
+    "tailwindcss-animate": "^1.0.7"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1",
+    "nodemon": "^3.1.7"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ribletx/Ingenieria-Software.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ribletx/Ingenieria-Software/issues"
+  },
+  "homepage": "."
 }

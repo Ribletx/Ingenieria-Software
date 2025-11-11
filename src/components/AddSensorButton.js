@@ -1,16 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:4000";
 
 const AddSensorButton = ({ onAddSensor, onCancel }) => {
   const [newSensor, setNewSensor] = useState({
     name: "",
     addressText: "",
     location: null,
-    machines: [], // ahora es una lista
+    machines: [],
   });
+
   const [suggestions, setSuggestions] = useState([]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
+  const [availableMachines, setAvailableMachines] = useState([]);
 
-  // Buscar direcciones (OpenStreetMap)
+  // 🔹 Obtener lista de máquinas desde la base de datos
+  useEffect(() => {
+    const fetchMachines = async () => {
+      try {
+        const res = await fetch(`${API_URL}/api/maquinas`);
+        if (!res.ok) throw new Error("Error al obtener máquinas");
+        const data = await res.json();
+        setAvailableMachines(data);
+      } catch (err) {
+        console.error("⚠️ No se pudieron obtener las máquinas:", err);
+        setAvailableMachines([]);
+      }
+    };
+    fetchMachines();
+  }, []);
+
+  // 🔹 Buscar direcciones (OpenStreetMap)
   const fetchSuggestions = async (q) => {
     if (!q || q.length < 3) {
       setSuggestions([]);
@@ -50,14 +70,14 @@ const AddSensorButton = ({ onAddSensor, onCancel }) => {
     setSuggestions([]);
   };
 
-  const handleToggleMachine = (machine) => {
+  const handleToggleMachine = (machineName) => {
     setNewSensor((prev) => {
-      const alreadySelected = prev.machines.includes(machine);
+      const alreadySelected = prev.machines.includes(machineName);
       return {
         ...prev,
         machines: alreadySelected
-          ? prev.machines.filter((m) => m !== machine)
-          : [...prev.machines, machine],
+          ? prev.machines.filter((m) => m !== machineName)
+          : [...prev.machines, machineName],
       };
     });
   };
@@ -132,26 +152,33 @@ const AddSensorButton = ({ onAddSensor, onCancel }) => {
           Máquinas disponibles
         </label>
         <div className="border rounded p-3 mb-4 space-y-2">
-          {["Máquina 1", "Máquina 2", "Máquina 3", "Máquina 4", "Máquina 5"].map(
-            (machine, i) => (
-              <label key={i} className="flex items-center gap-2 text-sm">
+          {availableMachines.length > 0 ? (
+            availableMachines.map((machine) => (
+              <label
+                key={machine.id}
+                className="flex items-center gap-2 text-sm"
+              >
                 <input
                   type="checkbox"
-                  checked={newSensor.machines.includes(machine)}
-                  onChange={() => handleToggleMachine(machine)}
+                  checked={newSensor.machines.includes(machine.nombre)}
+                  onChange={() => handleToggleMachine(machine.nombre)}
                 />
-                {machine}
+                {machine.nombre} —{" "}
+                <span className="text-gray-500 italic">
+                  {machine.descripcion}
+                </span>
               </label>
-            )
+            ))
+          ) : (
+            <p className="text-sm text-gray-500 italic">
+              No hay máquinas registradas en la base de datos.
+            </p>
           )}
         </div>
 
         {/* Botones */}
         <div className="flex justify-end gap-3">
-          <button
-            onClick={onCancel}
-            className="px-4 py-2 rounded bg-gray-200"
-          >
+          <button onClick={onCancel} className="px-4 py-2 rounded bg-gray-200">
             Cancelar
           </button>
           <button
