@@ -11,12 +11,12 @@ const Header = ({ onSearch }) => {
   };
 
   return (
-    <header className="flex flex-col md:flex-row items-center justify-between px-6 py-4 border-b border-gray-200 bg-white/70 backdrop-blur-sm shadow-sm gap-2 md:gap-4">
+    <header className="flex flex-col md:flex-row items-center justify-between px-6 py-4 border-b border-gray-200 bg-black/70 backdrop-blur-sm shadow-sm gap-2 md:gap-4">
       <div className="text-center md:text-left">
         <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-1 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-700">
           Sistema de Monitoreo de Sensores
         </h1>
-        <p className="text-gray-600 text-base md:text-lg">
+        <p className="text-white text-base md:text-lg">
           Visualiza el estado de tus centrales en tiempo real.
         </p>
       </div>
