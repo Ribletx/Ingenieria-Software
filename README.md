@@ -91,6 +91,11 @@ Ingenieria-Software/
 └── README.md
 ```
 
+## Diagrama relacional:
+|----------------------------------------------|
+| sede (1) ───< (N) maquina (1) ───< (N) sensor|
+|----------------------------------------------|
+
 ## Autores ✨
 
 | Nombre                 | Usuario de GitHub |
